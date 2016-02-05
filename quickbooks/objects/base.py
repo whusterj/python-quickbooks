@@ -90,10 +90,10 @@ class Ref(ToJsonMixin, FromJsonMixin):
     class_dict = {}
     list_dict = {}
 
-    def __init__(self):
-        self.value = ""
-        self.name = ""
-        self.type = ""
+    def __init__(self, value="", name="", type=""):
+        self.value = value
+        self.name = name
+        self.type = type
 
     def __str__(self):
         return self.name

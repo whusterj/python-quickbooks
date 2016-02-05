@@ -71,4 +71,3 @@ class Item(QuickbooksManagedObject, QuickbooksTransactionEntity):
         ref.value = self.Id
 
         return ref
-

@@ -9,15 +9,16 @@ class DetailLine(QuickbooksBaseObject):
         "CustomField": CustomField,
     }
 
-    def __init__(self):
+    def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
+                 DetailType="", LinkedTxn=[], CustomField=[]):
         super(DetailLine, self).__init__()
-        self.Id = None
-        self.LineNum = 0
-        self.Description = ""
-        self.Amount = 0
-        self.DetailType = ""
-        self.LinkedTxn = []
-        self.CustomField = []
+        self.Id = Id
+        self.LineNum = LineNum
+        self.Description = Description
+        self.Amount = Amount
+        self.DetailType = DetailType
+        self.LinkedTxn = LinkedTxn
+        self.CustomField = CustomField
 
     def __str__(self):
         return "[{0}] {1} {2}".format(self.LineNum, self.Description, self.Amount)
@@ -91,10 +92,10 @@ class DescriptionLineDetail(QuickbooksBaseObject):
         "TaxCodeRef": Ref
     }
 
-    def __init__(self):
+    def __init__(self, ServiceDate="", TaxCodeRef=None):
         super(DescriptionLineDetail, self).__init__()
-        self.ServiceDate = ""
-        self.TaxCodeRef = None
+        self.ServiceDate = ServiceDate
+        self.TaxCodeRef = TaxCodeRef
 
 
 class DescriptionLine(DetailLine):
@@ -102,10 +103,10 @@ class DescriptionLine(DetailLine):
         "DescriptionLineDetail": DescriptionLineDetail
     }
 
-    def __init__(self):
-        super(DescriptionLine, self).__init__()
+    def __init__(self, DescriptionLineDetail=None, **kwargs):
+        super(DescriptionLine, self).__init__(**kwargs)
         self.DetailType = "DescriptionOnly"
-        self.DescriptionLineDetail = None
+        self.DescriptionLineDetail = DescriptionLineDetail
 
 
 @python_2_unicode_compatible
@@ -118,18 +119,20 @@ class SalesItemLineDetail(QuickbooksBaseObject):
         "MarkupInfo": MarkupInfo,
     }
 
-    def __init__(self):
+    def __init__(self, UnitPrice=None, Qty=None, ServiceDate=None, TaxInclusiveAmt=None,
+                 MarkupInfo=None, ItemRef=None, ClassRef=None, TaxCodeRef=None,
+                 PriceLevelRef=None):
         super(SalesItemLineDetail, self).__init__()
-        self.UnitPrice = 0
-        self.Qty = 0
-        self.ServiceDate = ""
-        self.TaxInclusiveAmt = 0
+        self.UnitPrice = UnitPrice
+        self.Qty = Qty
+        self.ServiceDate = ServiceDate
+        self.TaxInclusiveAmt = TaxInclusiveAmt
 
-        self.MarkupInfo = None
-        self.ItemRef = None
-        self.ClassRef = None
-        self.TaxCodeRef = None
-        self.PriceLevelRef = None
+        self.MarkupInfo = MarkupInfo
+        self.ItemRef = ItemRef
+        self.ClassRef = ClassRef
+        self.TaxCodeRef = TaxCodeRef
+        self.PriceLevelRef = PriceLevelRef
 
     def __str__(self):
         return str(self.UnitPrice)
@@ -140,7 +143,7 @@ class SaleItemLine(DetailLine):
         "SalesItemLineDetail": SalesItemLineDetail
     }
 
-    def __init__(self):
-        super(SaleItemLine, self).__init__()
+    def __init__(self, SalesItemLineDetail=SalesItemLineDetail(), **kwargs):
+        super(SaleItemLine, self).__init__(**kwargs)
         self.DetailType = "SalesItemLineDetail"
-        self.SalesItemLineDetail = None
+        self.SalesItemLineDetail = SalesItemLineDetail

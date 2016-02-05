@@ -43,38 +43,44 @@ class Invoice(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
 
     qbo_object_name = "Invoice"
 
-    def __init__(self):
+    def __init__(self, Deposit=0, Balance=0, AllowIPNPayment=True, DocNumber="",
+                 PrivateNote="", DueDate="", ShipDate="", TrackingNum="", TotalAmt="",
+                 ApplyTaxAfterDiscount=False, PrintStatus="NotSet", EmailStatus="NotSet",
+                 ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", EInvoiceStatus=None,
+                 BillAddr=None, ShipAddr=None, BillEmail=None, CustomerRef=None,
+                 CurrencyRef=None, CustomerMemo=None, DepartmentRef=None, TxnTaxDetail=None,
+                 DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[]):
         super(Invoice, self).__init__()
-        self.Deposit = 0
-        self.Balance = 0
-        self.AllowIPNPayment = True
-        self.DocNumber = ""
-        self.PrivateNote = ""
-        self.DueDate = ""
-        self.ShipDate = ""
-        self.TrackingNum = ""
-        self.TotalAmt = ""
-        self.ApplyTaxAfterDiscount = False
-        self.PrintStatus = "NotSet"
-        self.EmailStatus = "NotSet"
-        self.ExchangeRate = 1
-        self.GlobalTaxCalculation = "TaxExcluded"
+        self.Deposit = Deposit
+        self.Balance = Balance
+        self.AllowIPNPayment = AllowIPNPayment
+        self.DocNumber = DocNumber
+        self.PrivateNote = PrivateNote
+        self.DueDate = DueDate
+        self.ShipDate = ShipDate
+        self.TrackingNum = TrackingNum
+        self.TotalAmt = TotalAmt
+        self.ApplyTaxAfterDiscount = ApplyTaxAfterDiscount
+        self.PrintStatus = PrintStatus
+        self.EmailStatus = EmailStatus
+        self.ExchangeRate = ExchangeRate
+        self.GlobalTaxCalculation = GlobalTaxCalculation
 
-        self.EInvoiceStatus = None
+        self.EInvoiceStatus = EInvoiceStatus
 
-        self.BillAddr = None
-        self.ShipAddr = None
-        self.BillEmail = None
-        self.CustomerRef = None
-        self.CurrencyRef = None
-        self.CustomerMemo = None
-        self.DepartmentRef = None
-        self.TxnTaxDetail = None
-        self.DeliveryInfo = None
+        self.BillAddr = BillAddr
+        self.ShipAddr = ShipAddr
+        self.BillEmail = BillEmail
+        self.CustomerRef = CustomerRef
+        self.CurrencyRef = CurrencyRef
+        self.CustomerMemo = CustomerMemo
+        self.DepartmentRef = DepartmentRef
+        self.TxnTaxDetail = TxnTaxDetail
+        self.DeliveryInfo = DeliveryInfo
 
-        self.CustomField = []
-        self.Line = []
-        self.LinkedTxn = []
+        self.CustomField = CustomField
+        self.Line = Line
+        self.LinkedTxn = LinkedTxn
 
     def __str__(self):
         return str(self.TotalAmt)
