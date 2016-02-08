@@ -1,6 +1,8 @@
 from six import python_2_unicode_compatible
-from .base import Address, PhoneNumber, EmailAddress, WebAddress, Ref, QuickbooksManagedObject, \
-    QuickbooksTransactionEntity
+from .base import (
+    Address, PhoneNumber, EmailAddress, WebAddress,
+    Ref, QuickbooksManagedObject, QuickbooksTransactionEntity,
+)
 
 
 @python_2_unicode_compatible
@@ -35,51 +37,56 @@ class Customer(QuickbooksManagedObject, QuickbooksTransactionEntity):
 
     qbo_object_name = "Customer"
 
-    def __init__(self):
-        super(Customer, self).__init__()
-        self.Title = ""
-        self.GivenName = ""
-        self.MiddleName = ""
-        self.FamilyName = ""
-        self.Suffix = ""
-        self.FullyQualifiedName = ""
-        self.CompanyName = ""
-        self.DisplayName = ""  # Constraints:Must be unique
-        self.PrintOnCheckName = ""
-        self.Notes = ""
-        self.Active = True
-        self.Job = False
-        self.BillWithParent = False
-        self.Taxable = True
-        self.Balance = 0
-        self.BalanceWithJobs = 0
-        self.PreferredDeliveryMethod = ""
-        self.ResaleNum = ""
-        self.Level = 0
-        self.OpenBalanceDate = ""
+    def __init__(self, Title="", GivenName="", MiddleName="", FamilyName="", Suffix="",
+                 FullyQualifiedName="", CompanyName="", DisplayName="", PrintOnCheckName="",
+                 Notes="", Active=True, Job=False, BillWithParent=False, Taxable=True,
+                 Balance=0, BalanceWithJobs=0, PreferredDeliveryMethod="", ResaleNum="",
+                 Level=0, OpenBalanceDate="", BillAddr=None, ShipAddr=None, PrimaryPhone=None,
+                 AlternatePhone=None, Mobile=None, Fax=None, PrimaryEmailAddr=None, WebAddr=None,
+                 DefaultTaxCodeRef=None, SalesTermRef=None, PaymentMethodRef=None, ParentRef=None,
+                 ARAccountRef=None, **kwargs):
+        super(Customer, self).__init__(**kwargs)
+        self.Title = Title
+        self.GivenName = GivenName
+        self.MiddleName = MiddleName
+        self.FamilyName = FamilyName
+        self.Suffix = Suffix
+        self.FullyQualifiedName = FullyQualifiedName
+        self.CompanyName = CompanyName
+        self.DisplayName = DisplayName  # Constraints:Must be unique
+        self.PrintOnCheckName = PrintOnCheckName
+        self.Notes = Notes
+        self.Active = Active
+        self.Job = Job
+        self.BillWithParent = BillWithParent
+        self.Taxable = Taxable
+        self.Balance = Balance
+        self.BalanceWithJobs = BalanceWithJobs
+        self.PreferredDeliveryMethod = PreferredDeliveryMethod
+        self.ResaleNum = ResaleNum
+        self.Level = Level
+        self.OpenBalanceDate = OpenBalanceDate
 
-        self.BillAddr = None
-        self.ShipAddr = None
-        self.PrimaryPhone = None
-        self.AlternatePhone = None
-        self.Mobile = None
-        self.Fax = None
-        self.PrimaryEmailAddr = None
-        self.WebAddr = None
-        self.DefaultTaxCodeRef = None
-        self.SalesTermRef = None
-        self.PaymentMethodRef = None
-        self.ParentRef = None
-        self.ARAccountRef = None
+        self.BillAddr = BillAddr
+        self.ShipAddr = ShipAddr
+        self.PrimaryPhone = PrimaryPhone
+        self.AlternatePhone = AlternatePhone
+        self.Mobile = Mobile
+        self.Fax = Fax
+        self.PrimaryEmailAddr = PrimaryEmailAddr
+        self.WebAddr = WebAddr
+        self.DefaultTaxCodeRef = DefaultTaxCodeRef
+        self.SalesTermRef = SalesTermRef
+        self.PaymentMethodRef = PaymentMethodRef
+        self.ParentRef = ParentRef
+        self.ARAccountRef = ARAccountRef
 
     def __str__(self):
         return self.DisplayName
 
     def to_ref(self):
-        ref = Ref()
-
-        ref.name = self.DisplayName
-        ref.type = self.qbo_object_name
-        ref.value = self.Id
-
-        return ref
+        return Ref(
+            name=self.DisplayName,
+            type=self.qbo_object_name,
+            value=self.Id
+        )

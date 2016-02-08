@@ -28,7 +28,14 @@ class Item(QuickbooksManagedObject, QuickbooksTransactionEntity):
 
     qbo_object_name = "Item"
 
-    def __init__(self):
+    def __init__(self, Name="", Sku="", Description="", Active=True, SubItem=False,
+                 FullyQualifiedName="", Taxable=False, SalesTaxInclusive=False,
+                 UnitPrice="", Type="Inventory", ItemCategoryType="Product", Level=0,
+                 PurchaseDesc="", PurchaseTaxInclusive=False, PurchaseCost=0,
+                 TrackQtyOnHand=False, QtyOnHand=0, InvStartDate="", AbatementRate="",
+                 ReverseChargeRate="", ServiceType="", AssetAccountRef=None,
+                 ExpenseAccountRef=None, IncomeAccountRef=None, SalesTaxCodeRef=None,
+                 ParentRef=None, PurchaseTaxCodeRef=None):
         super(Item, self).__init__()
         self.Name = ""
         self.Sku = ""
@@ -64,10 +71,8 @@ class Item(QuickbooksManagedObject, QuickbooksTransactionEntity):
         return self.Name
 
     def to_ref(self):
-        ref = Ref()
-
-        ref.name = self.Name
-        ref.type = self.qbo_object_name
-        ref.value = self.Id
-
-        return ref
+        return Ref(
+            name=self.Name,
+            type=self.qbo_object_name,
+            value=self.Id
+        )

@@ -11,11 +11,11 @@ class QuickbooksTransactionEntity(QuickbooksBaseObject):
     class_dict = {}
     list_dict = {}
 
-    def __init__(self):
-        self.Id = None
-        self.SyncToken = 0
-        self.sparse = False
-        self.domain = "QBO"
+    def __init__(self, Id=None, SyncToken=0, sparse=False, domain="QBO"):
+        self.Id = Id
+        self.SyncToken = SyncToken
+        self.sparse = sparse
+        self.domain = domain
 
 
 class QuickbooksManagedObject(QuickbooksBaseObject, ReadMixin, ListMixin, UpdateMixin):

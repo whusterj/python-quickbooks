@@ -1,15 +1,17 @@
 from six import python_2_unicode_compatible
-from .base import QuickbooksBaseObject, Ref, CustomField, Address, EmailAddress, CustomerMemo, QuickbooksManagedObject, \
-    QuickbooksTransactionEntity, LinkedTxn, LinkedTxnMixin
+from .base import (
+    QuickbooksBaseObject, Ref, CustomField, Address, EmailAddress, CustomerMemo,
+    QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxn, LinkedTxnMixin,
+)
 from .tax import TxnTaxDetail
 from .detailline import DetailLine
 
 
 class DeliveryInfo(QuickbooksBaseObject):
-    def __init__(self):
+    def __init__(self, DeliveryType="", DeliveryTime=""):
         super(DeliveryInfo, self).__init__()
-        self.DeliveryType = ""
-        self.DeliveryTime = ""
+        self.DeliveryType = DeliveryType
+        self.DeliveryTime = DeliveryTime
 
 
 @python_2_unicode_compatible
@@ -49,8 +51,8 @@ class Invoice(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
                  ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", EInvoiceStatus=None,
                  BillAddr=None, ShipAddr=None, BillEmail=None, CustomerRef=None,
                  CurrencyRef=None, CustomerMemo=None, DepartmentRef=None, TxnTaxDetail=None,
-                 DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[]):
-        super(Invoice, self).__init__()
+                 DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[], **kwargs):
+        super(Invoice, self).__init__(**kwargs)
         self.Deposit = Deposit
         self.Balance = Balance
         self.AllowIPNPayment = AllowIPNPayment
