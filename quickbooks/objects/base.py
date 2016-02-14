@@ -33,6 +33,7 @@ class MetaData:
 
 
 class LinkedTxnMixin(object):
+
     def to_linked_txn(self):
         linked_txn = LinkedTxn()
         linked_txn.TxnId = self.Id
@@ -114,11 +115,11 @@ class CustomField(ToJsonMixin, FromJsonMixin):
 class LinkedTxn(QuickbooksBaseObject):
     qbo_object_name = "LinkedTxn"
 
-    def __init__(self):
+    def __init__(self, TxnId=None, TxnType=None, TxnLineId=None):
         super(LinkedTxn, self).__init__()
-        self.TxnId = 0
-        self.TxnType = 0
-        self.TxnLineId = 0
+        self.TxnId = TxnId
+        self.TxnType = TxnType
+        self.TxnLineId = TxnLineId
 
     def __str__(self):
         return str(self.TxnId)

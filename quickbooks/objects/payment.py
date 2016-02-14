@@ -9,14 +9,15 @@ class PaymentLine(QuickbooksBaseObject):
         "LinkedTxn": LinkedTxn,
     }
 
-    def __init__(self):
+    def __init__(self, Id=None, LineNum=None, Description=None,
+                 Amount=0, LinkedTxn=[]):
         super(PaymentLine, self).__init__()
-        self.Id = 0
-        self.LineNum = 0
-        self.Description = ""
-        self.Amount = 0
+        self.Id = Id
+        self.LineNum = LineNum
+        self.Description = Description
+        self.Amount = Amount
 
-        self.LinkedTxn = []
+        self.LinkedTxn = LinkedTxn
 
     def __str__(self):
         return "[{0}] {1} {2}".format(self.LineNum, self.Description, self.Amount)
@@ -56,24 +57,28 @@ class Payment(QuickbooksManagedObject, QuickbooksTransactionEntity):
 
     qbo_object_name = "Payment"
 
-    def __init__(self):
-        super(Payment, self).__init__()
-        self.PaymentRefNum = ""
-        self.TotalAmt = 0
-        self.UnappliedAmt = 0
-        self.ExchangeRate = 1
-        self.TxnDate = ""
-        self.TxnSource = ""
-        self.PrivateNote = ""
-        self.TxnStatus = "PAID"
+    def __init__(self, PaymentRefNum=None, TotalAmt=0, UnappliedAmt=None, ExchangeRate=None,
+                 TxnDate=None, TxnSource=None, PrivateNote=None, TxnStatus=None,
+                 CreditCardPayment=None, ARAccountRef=None, CustomerRef=None,
+                 CurrencyRef=None, PaymentMethodRef=None, DepositToAccountRef=None,
+                 Line=[], **kwargs):
+        super(Payment, self).__init__(**kwargs)
+        self.PaymentRefNum = PaymentRefNum
+        self.TotalAmt = TotalAmt
+        self.UnappliedAmt = UnappliedAmt
+        self.ExchangeRate = ExchangeRate
+        self.TxnDate = TxnDate
+        self.TxnSource = TxnSource
+        self.PrivateNote = PrivateNote
+        self.TxnStatus = TxnStatus
 
-        self.CreditCardPayment = None
-        self.ARAccountRef = None
-        self.CustomerRef = None
-        self.CurrencyRef = None
-        self.PaymentMethodRef = None
-        self.DepositToAccountRef = None
-        self.Line = []
+        self.CreditCardPayment = CreditCardPayment
+        self.ARAccountRef = ARAccountRef
+        self.CustomerRef = CustomerRef
+        self.CurrencyRef = CurrencyRef
+        self.PaymentMethodRef = PaymentMethodRef
+        self.DepositToAccountRef = DepositToAccountRef
+        self.Line = Line
 
     def __str__(self):
         return str(self.TotalAmt)
