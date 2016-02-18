@@ -45,13 +45,14 @@ class Invoice(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
 
     qbo_object_name = "Invoice"
 
-    def __init__(self, Deposit=0, Balance=0, AllowIPNPayment=True, DocNumber="",
+    def __init__(self, Deposit=0, Balance=0, AllowIPNPayment=True, DocNumber=None,
                  PrivateNote="", DueDate="", ShipDate="", TrackingNum="", TotalAmt="",
                  ApplyTaxAfterDiscount=False, PrintStatus="NotSet", EmailStatus="NotSet",
                  ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", EInvoiceStatus=None,
                  BillAddr=None, ShipAddr=None, BillEmail=None, CustomerRef=None,
-                 CurrencyRef=None, CustomerMemo=None, DepartmentRef=None, TxnTaxDetail=None,
-                 DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[], **kwargs):
+                 CurrencyRef=None, SalesTermRef=None, CustomerMemo=None, DepartmentRef=None,
+                 TxnTaxDetail=None, DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[],
+                 **kwargs):
         super(Invoice, self).__init__(**kwargs)
         self.Deposit = Deposit
         self.Balance = Balance
@@ -75,6 +76,7 @@ class Invoice(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
         self.BillEmail = BillEmail
         self.CustomerRef = CustomerRef
         self.CurrencyRef = CurrencyRef
+        self.SalesTermRef = SalesTermRef
         self.CustomerMemo = CustomerMemo
         self.DepartmentRef = DepartmentRef
         self.TxnTaxDetail = TxnTaxDetail
