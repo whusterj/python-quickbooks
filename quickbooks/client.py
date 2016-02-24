@@ -44,7 +44,7 @@ class QuickBooks(object):
     _BUSINESS_OBJECTS = [
         "Account", "Attachable", "Bill", "BillPayment",
         "Class", "CompanyInfo", "CreditMemo", "Customer",
-        "Department", "Employee", "Estimate", "Invoice",
+        "Department", "Deposit", "Employee", "Estimate", "Invoice",
         "Item", "JournalEntry", "Payment", "PaymentMethod",
         "Preferences", "Purchase", "PurchaseOrder",
         "SalesReceipt", "TaxCode", "TaxRate", "Term",
@@ -175,12 +175,15 @@ class QuickBooks(object):
             'Accept': 'application/json'
         }
 
-        req = self.session.request(request_type, url, True, self.company_id, headers=headers, params=params, data=request_body)
+        req = self.session.request(request_type, url, True, self.company_id,
+                                   headers=headers, params=params, data=request_body)
 
         try:
             result = req.json()
         except:
-            raise QuickbooksException("Error reading json response", 10000)
+            raise QuickbooksException(
+                "Error reading json response. The access token may not be valid.", 10000
+            )
 
         if req.status_code is not httplib.OK or "Fault" in result:
             self.handle_exceptions(result["Fault"])

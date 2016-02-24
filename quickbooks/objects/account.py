@@ -20,23 +20,27 @@ class Account(QuickbooksManagedObject, QuickbooksTransactionEntity):
 
     qbo_object_name = "Account"
 
-    def __init__(self):
-        super(Account, self).__init__()
+    def __init__(self, Name="", SubAccount=False, FullyQualifiedName="",
+                 Active=True, Classification="", AccountType="", AccountSubType="",
+                 Description="", AcctNum="", CurrentBalance=None,
+                 CurrentBalanceWithSubAccounts=None, CurrencyRef=None,
+                 ParentRef=None, TaxCodeRef=None, **kwargs):
+        super(Account, self).__init__(**kwargs)
 
-        self.Name = ""
-        self.SubAccount = False
-        self.FullyQualifiedName = ""
-        self.Active = True
-        self.Classification = ""
-        self.AccountType = ""
-        self.AccountSubType = ""
-        self.Description = ""
-        self.AcctNum = ""
-        self.CurrentBalance = None  # Readonly
-        self.CurrentBalanceWithSubAccounts = None  # Readonly
-        self.CurrencyRef = None
-        self.ParentRef = None
-        self.TaxCodeRef = None
+        self.Name = Name
+        self.SubAccount = SubAccount
+        self.FullyQualifiedName = FullyQualifiedName
+        self.Active = Active
+        self.Classification = Classification
+        self.AccountType = AccountType
+        self.AccountSubType = AccountSubType
+        self.Description = Description
+        self.AcctNum = AcctNum
+        self.CurrentBalance = CurrentBalance  # Readonly
+        self.CurrentBalanceWithSubAccounts = CurrentBalanceWithSubAccounts  # Readonly
+        self.CurrencyRef = CurrencyRef
+        self.ParentRef = ParentRef
+        self.TaxCodeRef = TaxCodeRef
 
     def __str__(self):
         return self.FullyQualifiedName

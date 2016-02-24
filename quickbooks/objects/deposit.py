@@ -12,7 +12,8 @@ class AttachableRef(QuickbooksBaseObject):
         "CustomField": CustomField
     }
 
-    def __init__(self):
+    def __init__(self, LineInfo="",  IncludeOnSend=False, Inactive=False,
+                 NoRefOnly=False, EntityRef=None):
         super(AttachableRef, self).__init__()
         self.LineInfo = ""
         self.IncludeOnSend = False
@@ -28,11 +29,11 @@ class CashBackInfo(QuickbooksBaseObject):
         "AccountRef": None
     }
 
-    def __init__(self):
+    def __init__(self, Amount=0, Memo="", AccountRef=None):
         super(CashBackInfo, self).__init__()
-        self.Amount = 0
-        self.Memo = ""
-        self.AccountRef = None
+        self.Amount = Amount
+        self.Memo = Memo
+        self.AccountRef = AccountRef
 
 
 class DepositLineDetail(QuickbooksBaseObject):
@@ -43,15 +44,16 @@ class DepositLineDetail(QuickbooksBaseObject):
         "PaymentMethodRef": Ref,
     }
 
-    def __init__(self):
+    def __init__(self, CheckNum=None, TxnType=None, Entity=None, ClassRef=None,
+                 AccountRef=None, PaymentMethodRef=None):
         super(DepositLineDetail, self).__init__()
-        self.CheckNum = ""
-        self.TxnType = ""
+        self.CheckNum = CheckNum
+        self.TxnType = TxnType
 
-        self.Entity = None
-        self.ClassRef = None
-        self.AccountRef = None
-        self.PaymentMethodRef = None
+        self.Entity = Entity
+        self.ClassRef = ClassRef
+        self.AccountRef = AccountRef
+        self.PaymentMethodRef = PaymentMethodRef
 
 
 @python_2_unicode_compatible
@@ -68,15 +70,20 @@ class DepositLine(QuickbooksBaseObject):
 
     qbo_object_name = "Deposit"
 
-    def __init__(self):
+    def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
+                 DetailType="DepositLineDetail", LinkedTxn=[], CustomField=[],
+                 DepositToAccountRef=None, DepositLineDetail=None):
         super(DepositLine, self).__init__()
-        self.Id = 0
-        self.LineNum = 0
-        self.Description = ""
-        self.Amount = 0
-        self.DetailType = "DepositLineDetail"
-        self.LinkedTxn = []
-        self.CustomField = []
+        self.Id = Id
+        self.LineNum = LineNum
+        self.Description = Description
+        self.Amount = Amount
+        self.DetailType = DetailType
+        self.LinkedTxn = LinkedTxn
+        self.CustomField = CustomField
+
+        self.DepositToAccountRef = DepositToAccountRef
+        self.DepositLineDetail = DepositLineDetail
 
     def __str__(self):
         return str(self.Amount)
@@ -108,23 +115,26 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
 
     qbo_object_name = "Deposit"
 
-    def __init__(self):
-        super(Deposit, self).__init__()
-        self.TotalAmt = 0
-        self.HomeTotalAmt = 0
-        self.TxnDate = ""
-        self.DocNumber = ""
-        self.ExchangeRate = 1
-        self.GlobalTaxCalculation = "TaxExcluded"
-        self.PrivateNote = ""
-        self.TxnStatus = ""
-        self.TxnSource = ""
+    def __init__(self, TotalAmt=0, HomeTotalAmt=0, TxnDate="", DocNumber="",
+                 ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", PrivateNote="",
+                 TxnStatus="", TxnSource="", DepositToAccountRef=None, DepartmentRef=None,
+                 CurrencyRef=None, AttachableRef=None, Line=[], **kwargs):
+        super(Deposit, self).__init__(**kwargs)
+        self.TotalAmt = TotalAmt
+        self.HomeTotalAmt = HomeTotalAmt
+        self.TxnDate = TxnDate
+        self.DocNumber = DocNumber
+        self.ExchangeRate = ExchangeRate
+        self.GlobalTaxCalculation = GlobalTaxCalculation
+        self.PrivateNote = PrivateNote
+        self.TxnStatus = TxnStatus
+        self.TxnSource = TxnSource
 
-        self.DepositToAccountRef = None
-        self.DepartmentRef = None
-        self.CurrencyRef = None
-        self.AttachableRef = None
-        self.Line = []
+        self.DepositToAccountRef = DepositToAccountRef
+        self.DepartmentRef = DepartmentRef
+        self.CurrencyRef = CurrencyRef
+        self.AttachableRef = AttachableRef
+        self.Line = Line
 
     def __str__(self):
         return str(self.TotalAmt)
