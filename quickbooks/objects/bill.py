@@ -103,31 +103,31 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
 
     qbo_object_name = "Bill"
 
-    def __init__(self, DueDate="", Balance=0, TotalAmt="", TxnDate="", DocNumber="", PrivateNote="",
-                 ExchangeRate=0, GlobalTaxCalculation="", SalesTermRef=None, CurrencyRef=None,
+    def __init__(self, DueDate="", Balance=0, TotalAmt=0, TxnDate="", DocNumber="", PrivateNote="",
+                 ExchangeRate=None, GlobalTaxCalculation="", SalesTermRef=None, CurrencyRef=None,
                  AttachableRef=None, VendorRef=None, DepartmentRef=None, APAccountRef=None,
                  LinkedTxn=[], Line=[]):
 
         super(Bill, self).__init__()
 
-        self.DueDate = ""
-        self.Balance = 0
-        self.TotalAmt = ""
-        self.TxnDate = ""
-        self.DocNumber = ""
-        self.PrivateNote = ""
-        self.ExchangeRate = 0
-        self.GlobalTaxCalculation = ""
+        self.DueDate = DueDate
+        self.Balance = Balance
+        self.TotalAmt = TotalAmt
+        self.TxnDate = TxnDate
+        self.DocNumber = DocNumber
+        self.PrivateNote = PrivateNote
+        self.ExchangeRate = ExchangeRate
+        self.GlobalTaxCalculation = GlobalTaxCalculation
 
-        self.SalesTermRef = None
-        self.CurrencyRef = None
-        self.AttachableRef = None
-        self.VendorRef = None
-        self.DepartmentRef = None
-        self.APAccountRef = None
+        self.SalesTermRef = SalesTermRef
+        self.CurrencyRef = CurrencyRef
+        self.AttachableRef = AttachableRef
+        self.VendorRef = VendorRef
+        self.DepartmentRef = DepartmentRef
+        self.APAccountRef = APAccountRef
 
-        self.LinkedTxn = []
-        self.Line = []
+        self.LinkedTxn = LinkedTxn
+        self.Line = Line
 
     def __str__(self):
         return str(self.Balance)
