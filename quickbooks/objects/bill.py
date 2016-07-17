@@ -114,7 +114,7 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
     qbo_object_name = "Bill"
 
     def __init__(self, DueDate="", Balance=0, TotalAmt=0, TxnDate="", DocNumber="", PrivateNote="",
-                 ExchangeRate=None, GlobalTaxCalculation="", SalesTermRef=None, CurrencyRef=None,
+                 ExchangeRate=None, GlobalTaxCalculation=None, SalesTermRef=None, CurrencyRef=None,
                  AttachableRef=None, VendorRef=None, DepartmentRef=None, APAccountRef=None,
                  LinkedTxn=[], Line=[], **kwargs):
 
