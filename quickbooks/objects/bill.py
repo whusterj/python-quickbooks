@@ -14,7 +14,7 @@ class AccountBasedExpenseLineDetail(QuickbooksBaseObject):
         "MarkupInfo": MarkupInfo,
     }
 
-    def __init__(self, BillableStatus='', TaxAmount=0, TaxInclusiveAmt=0, CustomerRef=None,
+    def __init__(self, BillableStatus=None, TaxAmount=None, TaxInclusiveAmt=None, CustomerRef=None,
                  AccountRef=None, TaxCodeRef=None, **kwargs):
 
         super(AccountBasedExpenseLineDetail, self).__init__(**kwargs)
@@ -41,7 +41,7 @@ class ItemBasedExpenseLineDetail(QuickbooksBaseObject):
         "MarkupInfo": MarkupInfo
     }
 
-    def __init__(self, BillableStatus='', UnitPrice=0, TaxInclusiveAmt=0, Qty=0,
+    def __init__(self, BillableStatus=None, UnitPrice=0, TaxInclusiveAmt=0, Qty=0,
                  ItemRef=None, ClassRef=None, PriceLevelRef=None, TaxCodeRef=None,
                  MarkupInfo=None, CustomerRef=None, **kwargs):
 
@@ -70,16 +70,17 @@ class BillLine(QuickbooksBaseObject):
         "LinkedTxn": LinkedTxn
     }
 
-    def __init__(self, Id=0, LineNum=0, Description='', Amount='',
+    def __init__(self, Id=0, Amount='', LineNum=0, Description='',
                  DetailType='AccountBasedExpenseLineDetail', AccountBasedExpenseLineDetail=None,
                  ItemBasedExpenseLineDetail=None, **kwargs):
 
         super(BillLine, self).__init__(**kwargs)
 
         self.Id = Id
+        self.Amount = Amount
+
         self.LineNum = LineNum
         self.Description = Description
-        self.Amount = Amount
         self.DetailType = DetailType
 
         self.AccountBasedExpenseLineDetail = AccountBasedExpenseLineDetail
