@@ -15,3 +15,4 @@ from .objects.deposit import (
     AttachableRef, CashBackInfo,
     DepositLineDetail, DepositLine, Deposit,
 )
+from .objects.vendor import Vendor
