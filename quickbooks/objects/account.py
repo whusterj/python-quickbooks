@@ -25,6 +25,7 @@ class Account(QuickbooksManagedObject, QuickbooksTransactionEntity):
                  Description="", AcctNum="", CurrentBalance=None,
                  CurrentBalanceWithSubAccounts=None, CurrencyRef=None,
                  ParentRef=None, TaxCodeRef=None, **kwargs):
+
         super(Account, self).__init__(**kwargs)
 
         self.Name = Name

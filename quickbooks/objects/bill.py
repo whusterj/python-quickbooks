@@ -1,6 +1,6 @@
 from six import python_2_unicode_compatible
-from .base import QuickbooksBaseObject, Ref, LinkedTxn, QuickbooksManagedObject, QuickbooksTransactionEntity, \
-    LinkedTxnMixin, MarkupInfo
+from .base import QuickbooksBaseObject, Ref, LinkedTxn, QuickbooksManagedObject, \
+    QuickbooksTransactionEntity, LinkedTxnMixin, MarkupInfo
 from .tax import TxnTaxDetail
 
 
@@ -14,15 +14,18 @@ class AccountBasedExpenseLineDetail(QuickbooksBaseObject):
         "MarkupInfo": MarkupInfo,
     }
 
-    def __init__(self):
-        super(AccountBasedExpenseLineDetail, self).__init__()
-        self.BillableStatus = ""
-        self.TaxAmount = 0
-        self.TaxInclusiveAmt = 0
+    def __init__(self, BillableStatus='', TaxAmount=0, TaxInclusiveAmt=0, CustomerRef=None,
+                 AccountRef=None, TaxCodeRef=None, **kwargs):
 
-        self.CustomerRef = None
-        self.AccountRef = None
-        self.TaxCodeRef = None
+        super(AccountBasedExpenseLineDetail, self).__init__(**kwargs)
+
+        self.BillableStatus = BillableStatus
+        self.TaxAmount = TaxAmount
+        self.TaxInclusiveAmt = TaxInclusiveAmt
+
+        self.CustomerRef = CustomerRef
+        self.AccountRef = AccountRef
+        self.TaxCodeRef = TaxCodeRef
 
     def __str__(self):
         return self.BillableStatus
@@ -38,18 +41,22 @@ class ItemBasedExpenseLineDetail(QuickbooksBaseObject):
         "MarkupInfo": MarkupInfo
     }
 
-    def __init__(self):
-        super(ItemBasedExpenseLineDetail, self).__init__()
-        self.BillableStatus = ""
-        self.UnitPrice = 0
-        self.TaxInclusiveAmt = 0
-        self.Qty = 0
-        self.ItemRef = None
-        self.ClassRef = None
-        self.PriceLevelRef = None
-        self.TaxCodeRef = None
-        self.MarkupInfo = None
-        self.CustomerRef = None
+    def __init__(self, BillableStatus='', UnitPrice=0, TaxInclusiveAmt=0, Qty=0,
+                 ItemRef=None, ClassRef=None, PriceLevelRef=None, TaxCodeRef=None,
+                 MarkupInfo=None, CustomerRef=None, **kwargs):
+
+        super(ItemBasedExpenseLineDetail, self).__init__(**kwargs)
+
+        self.BillableStatus = BillableStatus
+        self.UnitPrice = UnitPrice
+        self.TaxInclusiveAmt = TaxInclusiveAmt
+        self.Qty = Qty
+        self.ItemRef = ItemRef
+        self.ClassRef = ClassRef
+        self.PriceLevelRef = PriceLevelRef
+        self.TaxCodeRef = TaxCodeRef
+        self.MarkupInfo = MarkupInfo
+        self.CustomerRef = CustomerRef
 
 
 @python_2_unicode_compatible
@@ -63,17 +70,20 @@ class BillLine(QuickbooksBaseObject):
         "LinkedTxn": LinkedTxn
     }
 
-    def __init__(self):
-        super(BillLine, self).__init__()
+    def __init__(self, Id=0, LineNum=0, Description='', Amount='',
+                 DetailType='AccountBasedExpenseLineDetail', AccountBasedExpenseLineDetail=None,
+                 ItemBasedExpenseLineDetail=None, **kwargs):
 
-        self.Id = 0
-        self.LineNum = 0
-        self.Description = ""
-        self.Amount = ""
-        self.DetailType = "AccountBasedExpenseLineDetail"
+        super(BillLine, self).__init__(**kwargs)
 
-        self.AccountBasedExpenseLineDetail = None
-        self.ItemBasedExpenseLineDetail = None
+        self.Id = Id
+        self.LineNum = LineNum
+        self.Description = Description
+        self.Amount = Amount
+        self.DetailType = DetailType
+
+        self.AccountBasedExpenseLineDetail = AccountBasedExpenseLineDetail
+        self.ItemBasedExpenseLineDetail = ItemBasedExpenseLineDetail
 
     def __str__(self):
         return str(self.Amount)
@@ -106,9 +116,9 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
     def __init__(self, DueDate="", Balance=0, TotalAmt=0, TxnDate="", DocNumber="", PrivateNote="",
                  ExchangeRate=None, GlobalTaxCalculation="", SalesTermRef=None, CurrencyRef=None,
                  AttachableRef=None, VendorRef=None, DepartmentRef=None, APAccountRef=None,
-                 LinkedTxn=[], Line=[]):
+                 LinkedTxn=[], Line=[], **kwargs):
 
-        super(Bill, self).__init__()
+        super(Bill, self).__init__(**kwargs)
 
         self.DueDate = DueDate
         self.Balance = Balance
