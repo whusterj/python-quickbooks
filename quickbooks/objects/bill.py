@@ -103,7 +103,11 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
 
     qbo_object_name = "Bill"
 
-    def __init__(self):
+    def __init__(self, DueDate="", Balance=0, TotalAmt="", TxnDate="", DocNumber="", PrivateNote="",
+                 ExchangeRate=0, GlobalTaxCalculation="", SalesTermRef=None, CurrencyRef=None,
+                 AttachableRef=None, VendorRef=None, DepartmentRef=None, APAccountRef=None,
+                 LinkedTxn=[], Line=[]):
+
         super(Bill, self).__init__()
 
         self.DueDate = ""
