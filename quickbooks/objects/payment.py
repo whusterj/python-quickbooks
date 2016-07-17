@@ -1,5 +1,7 @@
 from six import python_2_unicode_compatible
-from .base import QuickbooksBaseObject, Ref, LinkedTxn, QuickbooksManagedObject, QuickbooksTransactionEntity
+from .base import (
+    QuickbooksBaseObject, Ref, LinkedTxn, QuickbooksManagedObject, QuickbooksTransactionEntity,
+)
 from .creditcardpayment import CreditCardPayment
 
 
@@ -79,6 +81,14 @@ class Payment(QuickbooksManagedObject, QuickbooksTransactionEntity):
         self.PaymentMethodRef = PaymentMethodRef
         self.DepositToAccountRef = DepositToAccountRef
         self.Line = Line
+
+    def to_linked_txn(self):
+        linked_txn = LinkedTxn(
+            TxnId=self.Id,
+            TxnType="Payment",
+            TxnLineId=1
+        )
+        return linked_txn
 
     def __str__(self):
         return str(self.TotalAmt)
