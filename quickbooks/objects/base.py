@@ -5,12 +5,10 @@ from ..mixins import ToJsonMixin, FromJsonMixin, ReadMixin, ListMixin, UpdateMix
 class QuickbooksBaseObject(ToJsonMixin, FromJsonMixin):
     class_dict = {}
     list_dict = {}
+    detail_dict = {}
 
 
 class QuickbooksTransactionEntity(QuickbooksBaseObject):
-    class_dict = {}
-    list_dict = {}
-
     def __init__(self):
         self.Id = None
         self.SyncToken = 0
@@ -19,6 +17,10 @@ class QuickbooksTransactionEntity(QuickbooksBaseObject):
 
 
 class QuickbooksManagedObject(QuickbooksBaseObject, ReadMixin, ListMixin, UpdateMixin):
+    pass
+
+
+class QuickbooksReadOnlyObject(QuickbooksBaseObject, ReadMixin, ListMixin):
     pass
 
 
@@ -43,16 +45,21 @@ class LinkedTxnMixin(object):
 
 
 @python_2_unicode_compatible
-class Address(ToJsonMixin, FromJsonMixin):
+class Address(QuickbooksBaseObject):
     def __init__(self):
         self.Id = None
         self.Line1 = ""
         self.Line2 = ""
+        self.Line3 = ""
+        self.Line4 = ""
+        self.Line5 = ""
         self.City = ""
         self.CountrySubDivisionCode = ""
+        self.Country = ""
         self.PostalCode = ""
         self.Lat = ""
         self.Long = ""
+        self.Note = ""
 
     def __str__(self):
         return "{0} {1}, {2} {3}".format(self.Line1, self.City, self.CountrySubDivisionCode, self.PostalCode)
@@ -68,7 +75,7 @@ class PhoneNumber(ToJsonMixin, FromJsonMixin):
 
 
 @python_2_unicode_compatible
-class EmailAddress(ToJsonMixin, FromJsonMixin):
+class EmailAddress(QuickbooksBaseObject):
     def __init__(self):
         self.Address = ""
 
@@ -77,7 +84,7 @@ class EmailAddress(ToJsonMixin, FromJsonMixin):
 
 
 @python_2_unicode_compatible
-class WebAddress(ToJsonMixin, FromJsonMixin):
+class WebAddress(QuickbooksBaseObject):
     def __init__(self):
         self.URI = ""
 
@@ -86,10 +93,7 @@ class WebAddress(ToJsonMixin, FromJsonMixin):
 
 
 @python_2_unicode_compatible
-class Ref(ToJsonMixin, FromJsonMixin):
-    class_dict = {}
-    list_dict = {}
-
+class Ref(QuickbooksBaseObject):
     def __init__(self):
         self.value = ""
         self.name = ""
@@ -100,7 +104,7 @@ class Ref(ToJsonMixin, FromJsonMixin):
 
 
 @python_2_unicode_compatible
-class CustomField(ToJsonMixin, FromJsonMixin):
+class CustomField(QuickbooksBaseObject):
     def __init__(self):
         self.Type = ""
         self.Name = ""
@@ -161,10 +165,10 @@ class AttachableRef(QuickbooksBaseObject):
     def __init__(self):
         super(AttachableRef, self).__init__()
 
-        self.LineInfo = ""
+        self.LineInfo = None
         self.IncludeOnSend = False
-        self.Inactive = False
-        self.NoRefOnly = False
+        self.Inactive = None
+        self.NoRefOnly = None
 
         self.EntityRef = None
         self.CustomField = []

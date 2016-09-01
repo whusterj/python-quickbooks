@@ -46,7 +46,7 @@ class DepositLineDetail(QuickbooksBaseObject):
     def __init__(self):
         super(DepositLineDetail, self).__init__()
         self.CheckNum = ""
-        self.TxnType = ""
+        self.TxnType = None
 
         self.Entity = None
         self.ClassRef = None
@@ -70,7 +70,7 @@ class DepositLine(QuickbooksBaseObject):
 
     def __init__(self):
         super(DepositLine, self).__init__()
-        self.Id = 0
+        self.Id = None
         self.LineNum = 0
         self.Description = ""
         self.Amount = 0
@@ -106,6 +106,10 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
         "Line": DepositLine
     }
 
+    detail_dict = {
+        "DepositLineDetail": DepositLine
+    }
+
     qbo_object_name = "Deposit"
 
     def __init__(self):
@@ -118,7 +122,7 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
         self.GlobalTaxCalculation = "TaxExcluded"
         self.PrivateNote = ""
         self.TxnStatus = ""
-        self.TxnSource = ""
+        self.TxnSource = None
 
         self.DepositToAccountRef = None
         self.DepartmentRef = None

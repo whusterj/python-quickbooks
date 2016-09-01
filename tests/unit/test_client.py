@@ -4,13 +4,29 @@ from mock import patch
 
 from quickbooks.exceptions import QuickbooksException, SevereException
 from quickbooks import client
+from quickbooks.objects.salesreceipt import SalesReceipt
 
 
 class ClientTest(unittest.TestCase):
     def setUp(self):
         pass
 
+    def setUp(self):
+        """
+        Use a consistent set of defaults.
+        """
+        client.QuickBooks(
+            sandbox=True,
+            consumer_key="update_consumer_key",
+            consumer_secret="update_consumer_secret",
+            access_token="update_access_token",
+            access_token_secret="update_access_token_secret",
+            company_id="update_company_id",
+            callback_url="update_callback_url"
+        )
+
     def tearDown(self):
+        client.QuickBooks.enable_global()
         self.qb_client = client.QuickBooks()
         self.qb_client._drop()
 
@@ -72,6 +88,19 @@ class ClientTest(unittest.TestCase):
         self.assertEquals(self.qb_client2.access_token_secret, "update_access_token_secret")
         self.assertEquals(self.qb_client2.company_id, "update_company_id")
         self.assertEquals(self.qb_client2.callback_url, "update_callback_url")
+
+    def test_disable_global(self):
+        client.QuickBooks.disable_global()
+        self.qb_client = client.QuickBooks()
+
+        self.assertFalse(self.qb_client.sandbox)
+        self.assertFalse(self.qb_client.consumer_key)
+        self.assertFalse(self.qb_client.consumer_secret)
+        self.assertFalse(self.qb_client.access_token)
+        self.assertFalse(self.qb_client.access_token_secret)
+        self.assertFalse(self.qb_client.company_id)
+        self.assertFalse(self.qb_client.callback_url)
+        self.assertFalse(self.qb_client.minorversion)
 
     def test_api_url(self):
         qb_client = client.QuickBooks(sandbox=False)
@@ -138,6 +167,15 @@ class ClientTest(unittest.TestCase):
             self.assertEqual(qb_client.request_token, 'tokenvalue')
             self.assertTrue(qb_client.request_token_secret, 'secretvalue')
 
+    @patch('quickbooks.client.QuickBooks.make_request')
+    def test_get_current_user(self, make_req):
+        qb_client = client.QuickBooks()
+        qb_client.company_id = "1234"
+
+        result = qb_client.get_current_user()
+        url = "https://appcenter.intuit.com/api/v1/user/current"
+        make_req.assert_called_with("GET", url)
+
     @patch('quickbooks.client.QuickBooks.qbService')
     def test_get_access_tokens(self, qbService):
         qb_client = client.QuickBooks()
@@ -147,6 +185,33 @@ class ClientTest(unittest.TestCase):
 
         qbService.get_auth_session.assert_called_with('token', 'secret', data={'oauth_verifier': 'oauth_verifier'})
         self.assertFalse(session is None)
+
+    @patch('quickbooks.client.QuickBooks.make_request')
+    def test_disconnect_account(self, make_req):
+        qb_client = client.QuickBooks()
+        qb_client.company_id = "1234"
+
+        result = qb_client.disconnect_account()
+        url = "https://appcenter.intuit.com/api/v1/connection/disconnect"
+        make_req.assert_called_with("GET", url)
+
+    @patch('quickbooks.client.QuickBooks.make_request')
+    def test_reconnect_account(self, make_req):
+        qb_client = client.QuickBooks()
+        qb_client.company_id = "1234"
+
+        result = qb_client.reconnect_account()
+        url = "https://appcenter.intuit.com/api/v1/connection/reconnect"
+        make_req.assert_called_with("GET", url)
+
+    @patch('quickbooks.client.QuickBooks.make_request')
+    def test_get_report(self, make_req):
+        qb_client = client.QuickBooks()
+        qb_client.company_id = "1234"
+
+        result = qb_client.get_report("profitandloss", {1: 2})
+        url = "https://sandbox-quickbooks.api.intuit.com/v3/company/1234/reports/profitandloss"
+        make_req.assert_called_with("GET", url, params={1: 2})
 
     def test_get_instance(self):
         qb_client = client.QuickBooks()
@@ -179,6 +244,8 @@ class ClientTest(unittest.TestCase):
 
     @patch('quickbooks.client.QuickBooks.session')
     def test_make_request(self, qb_session):
+        qb_session.request.return_value = MockResponse()
+
         qb_client = client.QuickBooks()
         qb_client.company_id = "1234"
         url = "https://sandbox-quickbooks.api.intuit.com/v3/company/1234/test/1/"
@@ -186,8 +253,12 @@ class ClientTest(unittest.TestCase):
 
         qb_session.request.assert_called_with(
                 "GET", url, True, "1234", data={},
-                headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
-                params={'minorversion': 4})
+                headers={'Content-Type': 'application/json', 'Accept': 'application/json'}, params={})
+
+    def test_make_request_create_session(self):
+        receipt = SalesReceipt()
+        receipt.Id = 1
+        self.assertRaises(QuickbooksException, receipt.save)
 
     def test_handle_exceptions(self):
         qb_client = client.QuickBooks()
@@ -215,8 +286,57 @@ class ClientTest(unittest.TestCase):
 
         self.assertRaises(SevereException, qb_client.handle_exceptions, error_data)
 
+    @patch('quickbooks.client.QuickBooks.session')
+    def test_download_pdf(self, qb_session):
+        qb_client = client.QuickBooks(sandbox=True)
+        qb_client.company_id = "1234"
+        receipt = SalesReceipt()
+        receipt.Id = 1
+
+        receipt.download_pdf()
+
+        url = "https://sandbox-quickbooks.api.intuit.com/v3/company/1234/salesreceipt/1/pdf"
+        qb_session.request.assert_called_with(
+            "GET", url, True, "1234",
+            headers={'Content-Type': 'application/pdf', 'Accept': 'application/pdf, application/json'})
+
+        qb_session.request.return_value = MockPdfResponse()
+        response = receipt.download_pdf()
+
+        self.assertEqual(response, 'sample pdf content')
+
+    def test_download_nonexistent_pdf(self):
+        receipt = SalesReceipt()
+        receipt.Id = 666
+        self.assertRaises(QuickbooksException, receipt.download_pdf)
+
 
 class MockResponse(object):
     @property
     def text(self):
         return "oauth_token_secret=secretvalue&oauth_callback_confirmed=true&oauth_token=tokenvalue"
+
+    @property
+    def status_code(self):
+        try:
+            import httplib  # python 2
+        except ImportError:
+            import http.client as httplib  # python 3
+        return httplib.OK
+
+    def json(self):
+        return "{}"
+
+
+class MockPdfResponse(object):
+    @property
+    def status_code(self):
+        try:
+            import httplib  # python 2
+        except ImportError:
+            import http.client as httplib  # python 3
+        return httplib.OK
+
+    @property
+    def content(self):
+        return "sample pdf content"
