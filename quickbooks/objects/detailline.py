@@ -12,6 +12,7 @@ class DetailLine(QuickbooksBaseObject):
     def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
                  DetailType="", LinkedTxn=[], CustomField=[]):
         super(DetailLine, self).__init__()
+
         self.Id = Id
         self.LineNum = LineNum
         self.Description = Description
@@ -138,12 +139,128 @@ class SalesItemLineDetail(QuickbooksBaseObject):
         return str(self.UnitPrice)
 
 
-class SaleItemLine(DetailLine):
+class SalesItemLine(DetailLine):
     class_dict = {
         "SalesItemLineDetail": SalesItemLineDetail
     }
 
     def __init__(self, SalesItemLineDetail=SalesItemLineDetail(), **kwargs):
-        super(SaleItemLine, self).__init__(**kwargs)
+        super(SalesItemLine, self).__init__(**kwargs)
         self.DetailType = "SalesItemLineDetail"
         self.SalesItemLineDetail = SalesItemLineDetail
+
+
+class GroupLineDetail(QuickbooksBaseObject):
+    pass
+
+
+class GroupLine(DetailLine):
+    class_dict = {
+        "GroupLineDetail": GroupLineDetail
+    }
+
+    def __init__(self):
+        super(GroupLine, self).__init__()
+        self.DetailType = "SalesItemLineDetail"
+        self.SalesItemLineDetail = None
+
+
+class DescriptionLineDetail(QuickbooksBaseObject):
+    class_dict = {
+        "TaxCodeRef": Ref,
+    }
+
+    def __init__(self):
+        super(DescriptionLineDetail, self).__init__()
+        self.ServiceDate = ""
+        self.TaxCodeRef = None
+
+
+class DescriptionOnlyLine(DetailLine):
+    class_dict = {
+        "DescriptionLineDetail": DescriptionLineDetail
+    }
+
+    def __init__(self):
+        super(DescriptionOnlyLine, self).__init__()
+        self.DetailType = "DescriptionLineDetail"
+        self.DescriptionLineDetail = None
+
+
+@python_2_unicode_compatible
+class AccountBasedExpenseLineDetail(QuickbooksBaseObject):
+    class_dict = {
+        "CustomerRef": Ref,
+        "AccountRef": Ref,
+        "TaxCodeRef": Ref,
+        "ClassRef": Ref,
+        "MarkupInfo": MarkupInfo,
+    }
+
+    def __init__(self, BillableStatus=None, TaxAmount=None, TaxInclusiveAmt=None, CustomerRef=None,
+                 AccountRef=None, TaxCodeRef=None, **kwargs):
+
+        super(AccountBasedExpenseLineDetail, self).__init__(**kwargs)
+
+        self.BillableStatus = BillableStatus
+        self.TaxAmount = TaxAmount
+        self.TaxInclusiveAmt = TaxInclusiveAmt
+
+        self.CustomerRef = CustomerRef
+        self.AccountRef = AccountRef
+        self.TaxCodeRef = TaxCodeRef
+
+    def __str__(self):
+        return self.BillableStatus
+
+
+class AccountBasedExpenseLine(DetailLine):
+    class_dict = {
+        "AccountBasedExpenseLineDetail": AccountBasedExpenseLineDetail
+    }
+
+    def __init__(self):
+        super(AccountBasedExpenseLine, self).__init__()
+
+        self.DetailType = "AccountBasedExpenseLineDetail"
+        self.AccountBasedExpenseLineDetail = None
+
+
+class ItemBasedExpenseLineDetail(QuickbooksBaseObject):
+    class_dict = {
+        "ItemRef": Ref,
+        "ClassRef": Ref,
+        "PriceLevelRef": Ref,
+        "TaxCodeRef": Ref,
+        "CustomerRef": Ref,
+        "MarkupInfo": MarkupInfo
+    }
+
+    def __init__(self, BillableStatus=None, UnitPrice=0, TaxInclusiveAmt=0, Qty=0,
+                 ItemRef=None, ClassRef=None, PriceLevelRef=None, TaxCodeRef=None,
+                 MarkupInfo=None, CustomerRef=None, **kwargs):
+
+        super(ItemBasedExpenseLineDetail, self).__init__(**kwargs)
+
+        self.BillableStatus = BillableStatus
+        self.UnitPrice = UnitPrice
+        self.TaxInclusiveAmt = TaxInclusiveAmt
+        self.Qty = Qty
+        self.ItemRef = ItemRef
+        self.ClassRef = ClassRef
+        self.PriceLevelRef = PriceLevelRef
+        self.TaxCodeRef = TaxCodeRef
+        self.MarkupInfo = MarkupInfo
+        self.CustomerRef = CustomerRef
+
+
+class ItemBasedExpenseLine(DetailLine):
+    class_dict = {
+        "ItemBasedExpenseLineDetail": ItemBasedExpenseLineDetail
+    }
+
+    def __init__(self):
+        super(ItemBasedExpenseLine, self).__init__()
+
+        self.DetailType = "ItemBasedExpenseLineDetail"
+        self.ItemBasedExpenseLineDetail = None

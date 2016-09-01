@@ -74,6 +74,7 @@ class DepositLine(QuickbooksBaseObject):
                  DetailType="DepositLineDetail", LinkedTxn=[], CustomField=[],
                  DepositToAccountRef=None, DepositLineDetail=None):
         super(DepositLine, self).__init__()
+
         self.Id = Id
         self.LineNum = LineNum
         self.Description = Description
@@ -111,6 +112,10 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
 
     list_dict = {
         "Line": DepositLine
+    }
+
+    detail_dict = {
+        "DepositLineDetail": DepositLine
     }
 
     qbo_object_name = "Deposit"

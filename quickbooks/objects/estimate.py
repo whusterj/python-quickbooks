@@ -1,12 +1,13 @@
 from six import python_2_unicode_compatible
-from .base import QuickbooksBaseObject, CustomField, Ref, CustomerMemo, Address, EmailAddress, QuickbooksManagedObject, \
+from .base import CustomField, Ref, CustomerMemo, Address, EmailAddress, QuickbooksManagedObject, \
     LinkedTxnMixin, QuickbooksTransactionEntity, LinkedTxn
 from .tax import TxnTaxDetail
-from .detailline import DetailLine
+from .detailline import DetailLine, SalesItemLine, GroupLine, DescriptionLine, DiscountLine, SubtotalLine
+from ..mixins import QuickbooksPdfDownloadable
 
 
 @python_2_unicode_compatible
-class Estimate(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin):
+class Estimate(QuickbooksPdfDownloadable, QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin):
     """
     QBO definition: The Estimate represents a proposal for a financial transaction from a business to a customer
     for goods or services proposed to be sold, including proposed pricing.
@@ -32,24 +33,32 @@ class Estimate(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMi
         "Line": DetailLine,
     }
 
+    detail_dict = {
+        "SalesItemLineDetail": SalesItemLine,
+        "GroupLineDetail": GroupLine,
+        "DescriptionOnly": DescriptionLine,
+        "DiscountLineDetail": DiscountLine,
+        "SubTotalLineDetail": SubtotalLine,
+    }
+
     qbo_object_name = "Estimate"
 
     def __init__(self):
         super(Estimate, self).__init__()
-        self.DocNumber = ""
-        self.TxnDate = ""
-        self.TxnStatus = ""
-        self.PrivateNote = ""
+        self.DocNumber = None
+        self.TxnDate = None
+        self.TxnStatus = None
+        self.PrivateNote = None
         self.TotalAmt = 0
         self.ExchangeRate = 1
         self.ApplyTaxAfterDiscount = False
         self.PrintStatus = "NotSet"
         self.EmailStatus = "NotSet"
-        self.DueDate = ""
-        self.ShipDate = ""
-        self.ExpirationDate = ""
-        self.AcceptedBy = ""
-        self.AcceptedDate = ""
+        self.DueDate = None
+        self.ShipDate = None
+        self.ExpirationDate = None
+        self.AcceptedBy = None
+        self.AcceptedDate = None
         self.GlobalTaxCalculation = "TaxExcluded"
         self.BillAddr = None
         self.ShipAddr = None

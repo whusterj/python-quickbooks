@@ -14,6 +14,7 @@ class PaymentLine(QuickbooksBaseObject):
     def __init__(self, Id=None, LineNum=None, Description=None,
                  Amount=0, LinkedTxn=[]):
         super(PaymentLine, self).__init__()
+
         self.Id = Id
         self.LineNum = LineNum
         self.Description = Description
@@ -22,7 +23,7 @@ class PaymentLine(QuickbooksBaseObject):
         self.LinkedTxn = LinkedTxn
 
     def __str__(self):
-        return "[{0}] {1} {2}".format(self.LineNum, self.Description, self.Amount)
+        return str(self.Amount)
 
 
 @python_2_unicode_compatible
@@ -89,6 +90,9 @@ class Payment(QuickbooksManagedObject, QuickbooksTransactionEntity):
             TxnLineId=1
         )
         return linked_txn
+
+        # These fields are for minor version 4
+        self.TransactionLocationType = None
 
     def __str__(self):
         return str(self.TotalAmt)

@@ -1,62 +1,9 @@
 from six import python_2_unicode_compatible
-from .base import QuickbooksBaseObject, Ref, LinkedTxn, QuickbooksManagedObject, \
-    QuickbooksTransactionEntity, LinkedTxnMixin, MarkupInfo
+from quickbooks.objects.detailline import DetailLine, ItemBasedExpenseLine, \
+    AccountBasedExpenseLine, AccountBasedExpenseLineDetail, ItemBasedExpenseLineDetail
+from .base import Ref, LinkedTxn, QuickbooksBaseObject, QuickbooksManagedObject, \
+    QuickbooksTransactionEntity, LinkedTxnMixin
 from .tax import TxnTaxDetail
-
-
-@python_2_unicode_compatible
-class AccountBasedExpenseLineDetail(QuickbooksBaseObject):
-    class_dict = {
-        "CustomerRef": Ref,
-        "AccountRef": Ref,
-        "TaxCodeRef": Ref,
-        "ClassRef": Ref,
-        "MarkupInfo": MarkupInfo,
-    }
-
-    def __init__(self, BillableStatus=None, TaxAmount=None, TaxInclusiveAmt=None, CustomerRef=None,
-                 AccountRef=None, TaxCodeRef=None, **kwargs):
-
-        super(AccountBasedExpenseLineDetail, self).__init__(**kwargs)
-
-        self.BillableStatus = BillableStatus
-        self.TaxAmount = TaxAmount
-        self.TaxInclusiveAmt = TaxInclusiveAmt
-
-        self.CustomerRef = CustomerRef
-        self.AccountRef = AccountRef
-        self.TaxCodeRef = TaxCodeRef
-
-    def __str__(self):
-        return self.BillableStatus
-
-
-class ItemBasedExpenseLineDetail(QuickbooksBaseObject):
-    class_dict = {
-        "ItemRef": Ref,
-        "ClassRef": Ref,
-        "PriceLevelRef": Ref,
-        "TaxCodeRef": Ref,
-        "CustomerRef": Ref,
-        "MarkupInfo": MarkupInfo
-    }
-
-    def __init__(self, BillableStatus=None, UnitPrice=0, TaxInclusiveAmt=0, Qty=0,
-                 ItemRef=None, ClassRef=None, PriceLevelRef=None, TaxCodeRef=None,
-                 MarkupInfo=None, CustomerRef=None, **kwargs):
-
-        super(ItemBasedExpenseLineDetail, self).__init__(**kwargs)
-
-        self.BillableStatus = BillableStatus
-        self.UnitPrice = UnitPrice
-        self.TaxInclusiveAmt = TaxInclusiveAmt
-        self.Qty = Qty
-        self.ItemRef = ItemRef
-        self.ClassRef = ClassRef
-        self.PriceLevelRef = PriceLevelRef
-        self.TaxCodeRef = TaxCodeRef
-        self.MarkupInfo = MarkupInfo
-        self.CustomerRef = CustomerRef
 
 
 @python_2_unicode_compatible
@@ -108,8 +55,12 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
     }
 
     list_dict = {
-        "Line": BillLine,
-        "LinkedTxn": LinkedTxn
+        "Line": DetailLine,
+    }
+
+    detail_dict = {
+        "ItemBasedExpenseLineDetail": ItemBasedExpenseLine,
+        "AccountBasedExpenseLineDetail": AccountBasedExpenseLine,
     }
 
     qbo_object_name = "Bill"
@@ -142,3 +93,20 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
 
     def __str__(self):
         return str(self.Balance)
+
+    def to_linked_txn(self):
+        linked_txn = LinkedTxn()
+        linked_txn.TxnId = self.Id
+        linked_txn.TxnType = "Bill"
+        linked_txn.TxnLineId = 1
+
+        return linked_txn
+
+    def to_ref(self):
+        ref = Ref()
+
+        ref.name = self.DisplayName
+        ref.type = self.qbo_object_name
+        ref.value = self.Id
+
+        return ref
