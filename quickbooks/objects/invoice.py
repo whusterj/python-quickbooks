@@ -60,7 +60,7 @@ class Invoice(QuickbooksPdfDownloadable, QuickbooksManagedObject, QuickbooksTran
                  ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", EInvoiceStatus=None,
                  BillAddr=None, ShipAddr=None, BillEmail=None, CustomerRef=None,
                  CurrencyRef=None, SalesTermRef=None, CustomerMemo=None, DepartmentRef=None,
-                 TxnTaxDetail=None, DeliveryInfo=None, CustomField=[], Line=[], LinkedTxn=[],
+                 TxnTaxDetail=None, DeliveryInfo=None, CustomField=None, Line=None, LinkedTxn=None,
                  **kwargs):
         super(Invoice, self).__init__(**kwargs)
         self.Deposit = Deposit
@@ -91,9 +91,9 @@ class Invoice(QuickbooksPdfDownloadable, QuickbooksManagedObject, QuickbooksTran
         self.TxnTaxDetail = TxnTaxDetail
         self.DeliveryInfo = DeliveryInfo
 
-        self.CustomField = CustomField
-        self.Line = Line
-        self.LinkedTxn = LinkedTxn
+        self.CustomField = CustomField if CustomField is not None else []
+        self.Line = Line if Line is not None else []
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None else []
 
     def __str__(self):
         return str(self.TotalAmt)

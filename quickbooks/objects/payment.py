@@ -12,7 +12,7 @@ class PaymentLine(QuickbooksBaseObject):
     }
 
     def __init__(self, Id=None, LineNum=None, Description=None,
-                 Amount=0, LinkedTxn=[]):
+                 Amount=0, LinkedTxn=None):
         super(PaymentLine, self).__init__()
 
         self.Id = Id
@@ -20,7 +20,7 @@ class PaymentLine(QuickbooksBaseObject):
         self.Description = Description
         self.Amount = Amount
 
-        self.LinkedTxn = LinkedTxn
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None []
 
     def __str__(self):
         return str(self.Amount)
@@ -64,7 +64,7 @@ class Payment(QuickbooksManagedObject, QuickbooksTransactionEntity):
                  TxnDate=None, TxnSource=None, PrivateNote=None, TxnStatus=None,
                  CreditCardPayment=None, ARAccountRef=None, CustomerRef=None,
                  CurrencyRef=None, PaymentMethodRef=None, DepositToAccountRef=None,
-                 Line=[], **kwargs):
+                 Line=None, **kwargs):
         super(Payment, self).__init__(**kwargs)
         self.PaymentRefNum = PaymentRefNum
         self.TotalAmt = TotalAmt
@@ -81,7 +81,8 @@ class Payment(QuickbooksManagedObject, QuickbooksTransactionEntity):
         self.CurrencyRef = CurrencyRef
         self.PaymentMethodRef = PaymentMethodRef
         self.DepositToAccountRef = DepositToAccountRef
-        self.Line = Line
+
+        self.Line = Line if Line is not None else []
 
     def to_linked_txn(self):
         linked_txn = LinkedTxn(

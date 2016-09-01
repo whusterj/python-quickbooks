@@ -10,7 +10,7 @@ class DetailLine(QuickbooksBaseObject):
     }
 
     def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
-                 DetailType="", LinkedTxn=[], CustomField=[]):
+                 DetailType="", LinkedTxn=LinkedTxn, CustomField=CustomField):
         super(DetailLine, self).__init__()
 
         self.Id = Id
@@ -18,8 +18,9 @@ class DetailLine(QuickbooksBaseObject):
         self.Description = Description
         self.Amount = Amount
         self.DetailType = DetailType
-        self.LinkedTxn = LinkedTxn
-        self.CustomField = CustomField
+
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None else []
+        self.CustomField = CustomField if CustomField is not None else []
 
     def __str__(self):
         return "[{0}] {1} {2}".format(self.LineNum, self.Description, self.Amount)

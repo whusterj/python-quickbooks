@@ -71,7 +71,7 @@ class DepositLine(QuickbooksBaseObject):
     qbo_object_name = "Deposit"
 
     def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
-                 DetailType="DepositLineDetail", LinkedTxn=[], CustomField=[],
+                 DetailType="DepositLineDetail", LinkedTxn=None, CustomField=None,
                  DepositToAccountRef=None, DepositLineDetail=None):
         super(DepositLine, self).__init__()
 
@@ -80,8 +80,9 @@ class DepositLine(QuickbooksBaseObject):
         self.Description = Description
         self.Amount = Amount
         self.DetailType = DetailType
-        self.LinkedTxn = LinkedTxn
-        self.CustomField = CustomField
+
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None else []
+        self.CustomField = CustomField if CustomField is not None else []
 
         self.DepositToAccountRef = DepositToAccountRef
         self.DepositLineDetail = DepositLineDetail
@@ -123,7 +124,7 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
     def __init__(self, TotalAmt=0, HomeTotalAmt=0, TxnDate="", DocNumber="",
                  ExchangeRate=1, GlobalTaxCalculation="TaxExcluded", PrivateNote="",
                  TxnStatus="", TxnSource="", DepositToAccountRef=None, DepartmentRef=None,
-                 CurrencyRef=None, AttachableRef=None, Line=[], **kwargs):
+                 CurrencyRef=None, AttachableRef=None, Line=None, **kwargs):
         super(Deposit, self).__init__(**kwargs)
         self.TotalAmt = TotalAmt
         self.HomeTotalAmt = HomeTotalAmt
@@ -139,7 +140,8 @@ class Deposit(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMix
         self.DepartmentRef = DepartmentRef
         self.CurrencyRef = CurrencyRef
         self.AttachableRef = AttachableRef
-        self.Line = Line
+
+        self.Line = Line if Line is not None else []
 
     def __str__(self):
         return str(self.TotalAmt)
