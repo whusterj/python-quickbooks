@@ -68,7 +68,7 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
     def __init__(self, DueDate="", Balance=0, TotalAmt=0, TxnDate="", DocNumber="", PrivateNote="",
                  ExchangeRate=None, GlobalTaxCalculation=None, SalesTermRef=None, CurrencyRef=None,
                  AttachableRef=None, VendorRef=None, DepartmentRef=None, APAccountRef=None,
-                 LinkedTxn=[], Line=[], **kwargs):
+                 LinkedTxn=None, Line=None, **kwargs):
 
         super(Bill, self).__init__(**kwargs)
 
@@ -88,8 +88,8 @@ class Bill(QuickbooksManagedObject, QuickbooksTransactionEntity, LinkedTxnMixin)
         self.DepartmentRef = DepartmentRef
         self.APAccountRef = APAccountRef
 
-        self.LinkedTxn = LinkedTxn
-        self.Line = Line
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None else []
+        self.Line = Line if Line is not None else []
 
     def __str__(self):
         return str(self.Balance)
