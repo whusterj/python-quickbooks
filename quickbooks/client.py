@@ -277,14 +277,24 @@ class QuickBooks(object):
             request_type, url, True, self.company_id, headers=headers, params=params, data=request_body)
 
         if req.status_code == httplib.UNAUTHORIZED:
-            raise AuthorizationException("Application authentication failed", detail=req.text)
+            raise AuthorizationException("Application authentication failed: {0}".format(req.text), detail=req.text)
+
+        # HACK
+        # QBO returns XML when the status is 403 Forbidden. Search the request content for
+        # 'ThrottleExceeded' and raise an appropriate error message.
+        if req.status_code == httplib.FORBIDDEN:
+            if 'message=ThrottleExceeded' in req.content:
+                e = QuickbooksException("Quickbooks API throttle exceeded. "
+                                        "Wait a moment and then try again. "
+                                        "{0}".format(req.text), 10000)
+                e.request = req
+                raise e
+        # END HACK
 
         try:
             result = req.json()
-        except:
-            raise QuickbooksException(
-                "Error reading json response. The access token may not be valid.", 10000
-            )
+        except ValueError:
+            raise QuickbooksException("Error reading json response: {0}".format(req.text), 10000)
 
         if "Fault" in result:
             self.handle_exceptions(result["Fault"])
