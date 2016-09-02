@@ -20,7 +20,7 @@ class PaymentLine(QuickbooksBaseObject):
         self.Description = Description
         self.Amount = Amount
 
-        self.LinkedTxn = LinkedTxn if LinkedTxn is not None []
+        self.LinkedTxn = LinkedTxn if LinkedTxn is not None else []
 
     def __str__(self):
         return str(self.Amount)
