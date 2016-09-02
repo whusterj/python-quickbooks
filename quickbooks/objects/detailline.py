@@ -10,7 +10,8 @@ class DetailLine(QuickbooksBaseObject):
     }
 
     def __init__(self, Id=None, LineNum=0, Description="", Amount=0,
-                 DetailType="", LinkedTxn=LinkedTxn, CustomField=CustomField):
+                 DetailType="", LinkedTxn=None, CustomField=None):
+
         super(DetailLine, self).__init__()
 
         self.Id = Id
@@ -124,7 +125,9 @@ class SalesItemLineDetail(QuickbooksBaseObject):
     def __init__(self, UnitPrice=None, Qty=None, ServiceDate=None, TaxInclusiveAmt=None,
                  MarkupInfo=None, ItemRef=None, ClassRef=None, TaxCodeRef=None,
                  PriceLevelRef=None):
+
         super(SalesItemLineDetail, self).__init__()
+
         self.UnitPrice = UnitPrice
         self.Qty = Qty
         self.ServiceDate = ServiceDate
@@ -146,7 +149,9 @@ class SalesItemLine(DetailLine):
     }
 
     def __init__(self, SalesItemLineDetail=SalesItemLineDetail(), **kwargs):
+
         super(SalesItemLine, self).__init__(**kwargs)
+
         self.DetailType = "SalesItemLineDetail"
         self.SalesItemLineDetail = SalesItemLineDetail
 
